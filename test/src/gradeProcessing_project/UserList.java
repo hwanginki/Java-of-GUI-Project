@@ -24,18 +24,16 @@ public class UserList extends JFrame implements ActionListener {
 		ArrayList<MemberAddVO1> mb = new ArrayList<MemberAddVO1>();
 		mb.add(new MemberAddVO1("a", "b"));
 		
-		System.out.println(mb.get(0));
-		
-		String[] fieldName = {"아이디", "비밀번호"};
+		String[] fieldName = { "아이디", "비밀번호" };
 		
         data = new String[2][2];
-        String d0[]={"test","test1"};
-        String d1[]={"abc","abc1"};
+        String d0[] = { "test", "test1" };
+        String d1[] = { "abc", "abc1" };
         data[0] = d0;
         data[1] = d1;
         
         table = new JTable(data,fieldName);
-        // table.addMouseListener(this);
+
         getContentPane().add(new JScrollPane(table),BorderLayout.CENTER);
         
 		setTitle("회원목록");
@@ -61,7 +59,7 @@ public class UserList extends JFrame implements ActionListener {
 	class MyListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JButton b = (JButton) e.getSource();
-			if (b.getText().equals("닫기")) { // 이벤트가 일어난 Button의 텍스트가 "확인"이면
+			if (b.getText().equals("닫기")) { // 클릭 이벤트가 발생했을 때 일어나는 Button의 텍스트가 "확인"이면
 			}
 		}
 	}
@@ -71,7 +69,7 @@ public class UserList extends JFrame implements ActionListener {
     }
 
 	@Override
-	public void actionPerformed(ActionEvent e) {}
+	public void actionPerformed(ActionEvent e) { }
 	
 	class MemberAddVO1 {
 		private String id;
