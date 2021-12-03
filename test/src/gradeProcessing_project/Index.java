@@ -105,7 +105,7 @@ class JPanel_1 extends JPanel {
 					}
 				} catch (NumberFormatException e1) {
 					JOptionPane.showMessageDialog(null, "문자를 입력하시면 안됩니다.", "에러창", JOptionPane.ERROR_MESSAGE);
-					tfName.setText("");	subjectScore.setText("");
+					subjectScore.setText("");
 					e1.printStackTrace();
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(null, "예외 발생했습니다.", "에러창", JOptionPane.ERROR_MESSAGE);
@@ -163,6 +163,8 @@ class JPanel_1 extends JPanel {
 final class JPanel_2 extends JPanel {
 	private JTable table;
 	private String data[][];
+	private JButton btUpdate;
+	private JButton btDelete;
 	private JButton btRepresh;
 	private Label avgBtn;
     private JPanel tablePane;
@@ -217,6 +219,20 @@ final class JPanel_2 extends JPanel {
         avgBtn.setPreferredSize(new Dimension(150, 50));
         add(avgBtn);
         
+//        btUpdate = new JButton("수정");
+//        add(btUpdate);
+        
+        btDelete = new JButton("삭제");
+        btDelete.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+        	
+        add(btDelete);
+        
 		btRepresh = new JButton("새로고침");
 		btRepresh.addActionListener(new ActionListener() {
 			
@@ -240,7 +256,7 @@ final class JPanel_2 extends JPanel {
 	            // Model관련 테이블 관리해주는 클래스 불러옵니다.
 	            DefaultTableModel m = (DefaultTableModel) table.getModel();
 	            // getRowCount() 사용해 밑으로 추가할 수 있도록 출력합니다.
-	            m.insertRow(m.getRowCount(), new Object[] { jpanel01, jpanel02, jpanel03, jpanel04});
+	            m.insertRow(m.getRowCount(), new Object[] {jpanel01, jpanel02, jpanel03, jpanel04});
 	            table.updateUI();
 	            // 합계 추가한다.
 	            for (int i = 0; i < m.getRowCount(); i++) {
@@ -281,4 +297,10 @@ public class Index extends JFrame {
 		setLocationRelativeTo(null); // 화면 가운데 배치 사용합니다.
 		setVisible(true);
 	}
+	
+	public static void main(String[] args) {
+		new Index();
+	}
 }
+
+
