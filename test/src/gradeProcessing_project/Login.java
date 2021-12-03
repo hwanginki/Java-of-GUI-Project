@@ -20,7 +20,6 @@ import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 class Login extends JFrame {
-	
 	private JPanel panel = new JPanel(new GridLayout(3, 2));
 	private JLabel idLabel = new JLabel("아이디");
 	private JLabel pwLabel = new JLabel("비밀번호");
