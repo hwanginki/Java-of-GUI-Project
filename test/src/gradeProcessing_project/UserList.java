@@ -6,26 +6,21 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+@SuppressWarnings("serial")
 public class UserList extends JFrame implements ActionListener {
 	private JPanel panel = new JPanel();
 	private JButton button = new JButton("닫기");
-	private JLabel label = new JLabel("회원목록");
 	protected JTable table;
 	protected String data[][];
 	
 	public UserList() {
-		ArrayList<MemberAddVO1> mb = new ArrayList<MemberAddVO1>();
-		mb.add(new MemberAddVO1("a", "b"));
-		
 		String[] fieldName = { "아이디", "비밀번호" };
 		
         data = new String[2][2];

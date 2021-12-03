@@ -23,14 +23,15 @@ import javax.swing.table.DefaultTableModel;
 import member.MemberVO;
 
 /**
- * @프로젝트 시작일_2021.11.25
+ * @프로젝트 시작일_2021.11.25 - 종료일_2021.12.03
  * @author HWNAG INKI
  * @see 성적조회, 성적입력 탭창
  * @수정해야될 것 : 과목 추가 및 합계(12.03완료), 평점 추가할 수 있도록 구현(12.03완료), 점수 유효성(12.02완료)
- * A+, A, -A 그런식 평가할것(12.03완료), 테이블에서 한줄 수정 또는 삭제 구현, 깃허브 URI 버튼 추가(12.02완료)
+ * A+, A, -A 그런식 평가할것(12.03완료), 테이블에서 한줄 삭제 구현(12.03완료), 깃허브 URI 버튼 추가(12.02완료)
  * 테이블 크기 조정 추가(12.02 완료) 아이콘 이미지 구현(12.03완료) 팝업창 아이콘 추가(12.03완료)  
  * 
  */
+
 class JPanel_1 extends JPanel {
 	// 클래스 멤버 필드 설정
 	private	JPanel panel1;
@@ -216,58 +217,81 @@ final class JPanel_2 extends JPanel {
         
         DefaultTableModel m = (DefaultTableModel) table.getModel();
         avgBtn = new Label("평균은 100 입니다.");
-        avgBtn.setPreferredSize(new Dimension(150, 50));
+        avgBtn.setPreferredSize(new Dimension(100, 50));
         add(avgBtn);
-        
-//        btUpdate = new JButton("수정");
-//        add(btUpdate);
         
         btDelete = new JButton("삭제");
         btDelete.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				
+			public void actionPerformed(ActionEvent e) throws ArithmeticException {
+				int index = table.getSelectedRow();
+		        if (index < 0) {
+		        	JOptionPane.showMessageDialog(null, "삭제할 행을 선택해주세요.", "경고", JOptionPane.WARNING_MESSAGE);
+		        } else {
+		        	try {
+		        		model.removeRow(index);
+		        		
+		        		int sum = 0;
+		        		for (int i = 0; i < m.getRowCount(); i++) {
+		        			String convert = String.valueOf(model.getValueAt(i, 2));
+		        			sum += Integer.valueOf(convert);
+		        		}
+		        		avgBtn.setText("평균은 " + (sum / m.getRowCount()) + " 입니다.");
+					} catch (Exception ex) {
+						avgBtn.setText("평균은 0 입니다.");
+						JOptionPane.showMessageDialog(null, "삭제할 행이 없습니다.", "에러창", JOptionPane.ERROR_MESSAGE);
+						ex.printStackTrace();
+					}
+		        }
 			}
 		});
-        	
+        btDelete.setPreferredSize(new Dimension(90, 28));
         add(btDelete);
         
 		btRepresh = new JButton("새로고침");
 		btRepresh.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String jpanel01 = jpanel1.al.get(0).getName();
-	            String jpanel02 = jpanel1.al.get(0).getSubjectName();
-	            int jpanel03 = jpanel1.al.get(0).getScore();
-	            String jpanel04 = null;
-	            
-	            // 등급 판별 로직
-	            for (int i = 0; i < members.size(); i++) {
-		            	switch (Integer.valueOf(jpanel03) / 10) {
-		            	case 10: jpanel04 = "A"; break; case 9: jpanel04 = "B"; break;
-		            	case 8: jpanel04 = "C"; break; case 7: jpanel04 = "D"; break;
-		            	default: jpanel04 = "F";
-	            	}
-	            }
 
-	            int sum = 0; // 점수 합계 변수
-	            // Model관련 테이블 관리해주는 클래스 불러옵니다.
-	            DefaultTableModel m = (DefaultTableModel) table.getModel();
-	            // getRowCount() 사용해 밑으로 추가할 수 있도록 출력합니다.
-	            m.insertRow(m.getRowCount(), new Object[] {jpanel01, jpanel02, jpanel03, jpanel04});
-	            table.updateUI();
-	            // 합계 추가한다.
-	            for (int i = 0; i < m.getRowCount(); i++) {
-	            	String convert = String.valueOf(model.getValueAt(i, 2));
-	            	sum += Integer.valueOf(convert);
+			@Override
+			public void actionPerformed(ActionEvent e) throws NumberFormatException {
+				try {
+					String jpanel01 = jpanel1.al.get(0).getName();
+					String jpanel02 = jpanel1.al.get(0).getSubjectName();
+					int jpanel03 = jpanel1.al.get(0).getScore();
+					String jpanel04 = null;
+
+					// 등급 판별 로직
+					for (int i = 0; i < members.size(); i++) {
+						switch (Integer.valueOf(jpanel03) / 10) {
+						case 10: jpanel04 = "A"; break;	case 9:	jpanel04 = "B";	break;
+						case 8:	jpanel04 = "C";	break;	case 7:	jpanel04 = "D";	break;
+						default: jpanel04 = "F";
+						}
+					}
+
+					int sum = 0; // 점수 합계 변수
+					// Model관련 테이블 관리해주는 클래스 불러옵니다.
+					DefaultTableModel m = (DefaultTableModel) table.getModel();
+					// getRowCount() 사용해 밑으로 추가할 수 있도록 출력합니다.
+					m.insertRow(m.getRowCount(), new Object[] { jpanel01, jpanel02, jpanel03, jpanel04 });
+					table.updateUI();
+					// 합계 추가한다.
+					for (int i = 0; i < m.getRowCount(); i++) {
+						String convert = String.valueOf(model.getValueAt(i, 2));
+						sum += Integer.valueOf(convert);
+					}
+					// 평균 구한다.
+					avgBtn.setText("평균은 " + (sum / m.getRowCount()) + " 입니다.");
+				} catch (NullPointerException e1) {
+					JOptionPane.showMessageDialog(null, "성적입력 후, 다시시도해보세요.", "경고", JOptionPane.WARNING_MESSAGE);
+					e1.printStackTrace();
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, "다른 예외 문제가 발생했습니다.(관리자에게 문의해보세요)", "에러창", JOptionPane.ERROR_MESSAGE);
+					e2.printStackTrace();
 				}
-	            // 평균 구한다.
-	            avgBtn.setText("평균은 " + (sum / m.getRowCount()) + " 입니다.");
 			}
-		}); 
-		avgBtn.setPreferredSize(new Dimension(390, 50));
+		});
+		avgBtn.setPreferredSize(new Dimension(150, 100));
 		add(btRepresh);
 	}
 }
@@ -297,10 +321,4 @@ public class Index extends JFrame {
 		setLocationRelativeTo(null); // 화면 가운데 배치 사용합니다.
 		setVisible(true);
 	}
-	
-	public static void main(String[] args) {
-		new Index();
-	}
 }
-
-
