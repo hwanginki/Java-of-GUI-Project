@@ -28,7 +28,7 @@ import member.MemberVO;
  * @see 성적조회, 성적입력 탭창
  * @수정해야될 것 : 과목 추가 및 합계(12.03완료), 평점 추가할 수 있도록 구현(12.03완료), 점수 유효성(12.02완료)
  * A+, A, -A 그런식 평가할것(12.03완료), 테이블에서 한줄 수정 또는 삭제 구현, 깃허브 URI 버튼 추가(12.02완료)
- * 테이블 크기 조정 추가(12.02 완료) 아이콘 이미지 구현(12.03완료) 팝업창 아이콘 추가(12.03완료)
+ * 테이블 크기 조정 추가(12.02 완료) 아이콘 이미지 구현(12.03완료) 팝업창 아이콘 추가(12.03완료)  
  * 
  */
 class JPanel_1 extends JPanel {
@@ -193,7 +193,7 @@ final class JPanel_2 extends JPanel {
 		
 		// 등급 판별 로직
 		for (int i = 0; i < members.size(); i++) {
-			int conScore = members.get(i).getScore();ㅇ
+			int conScore = members.get(i).getScore();
 				switch (conScore / 10) {
 				case 10: data[i][3] = "A"; break; case 9: data[i][3] = "B"; break;
 				case 8: data[i][3] = "C"; break; case 7: data[i][3] = "D"; break;
