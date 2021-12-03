@@ -32,7 +32,7 @@ class Login extends JFrame {
 	private JButton gitHubBtn = new JButton("클릭");
 	
 	public Login() {
-		setTitle("로그인");
+		setTitle("성적 처리 프로그램_로그인");
 		setSize(350, 420);
 		getContentPane().setLayout(null);
 		
@@ -107,16 +107,15 @@ class Login extends JFrame {
 				String pw = pwText.getText().trim();
 
 				if (id.length() == 0 || pw.length() == 0) {
-					JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호를 입력해주세요.", "입력창",
-							JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호를 입력해주세요.", "입력창", JOptionPane.DEFAULT_OPTION);
 					return;
 				} else if (id.equals("test") && pw.equals("test1") || id.equals("abc") && pw.equals("abc1")) {
-					JOptionPane.showMessageDialog(null, "로그인 성공", "로그인 확인해주세요", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showMessageDialog(null, "로그인 성공", "로그인", JOptionPane.DEFAULT_OPTION);
 					dispose(); // 주의! System.exit(0);으로 설정하면 프레임 창 뜨지 않고 프로그램 종료 주의!
 					new Index(); // Index 클래스 이동
 					return;
 				}
-				JOptionPane.showMessageDialog(null, "로그인 실패", "로그인 확인해주세요", JOptionPane.DEFAULT_OPTION);
+				JOptionPane.showMessageDialog(null, "로그인 실패", "로그인", JOptionPane.DEFAULT_OPTION);
 			}
 		});
 	}
@@ -129,13 +128,5 @@ class Login extends JFrame {
 				new UserList();
 			}
 		});
-	}
-
-	public static void run() {
-		new Login();
-	}
-
-	public static void main(String[] args) {
-		run();
 	}
 }

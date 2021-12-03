@@ -52,6 +52,7 @@ public class UserList extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
+		setResizable(false);
 		setLocationRelativeTo(null);
         setVisible(true);
 	}
@@ -63,10 +64,6 @@ public class UserList extends JFrame implements ActionListener {
 			}
 		}
 	}
-	
-	public static void main(String[] args) {
-        new UserList();
-    }
 
 	@Override
 	public void actionPerformed(ActionEvent e) { }

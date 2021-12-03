@@ -26,9 +26,7 @@ import member.MemberVO;
  * @see 성적조회, 성적입력 탭창
  * @수정해야될 것 : 성적 처리하는 데 필요한 계산기 구현,
  * 과목 추가 및 합계(12.03완료), 평점 추가할 수 있도록 구현(12.03완료), 점수 유효성(12.02완료)
- * A+, A, -A 그런식 평가할것, 테이블에서 한줄 수정 또는 삭제 구현, 깃허브 URI 버튼 추가(12.02완료)
- * 
- *
+ * A+, A, -A 그런식 평가할것(12.03완료), 테이블에서 한줄 수정 또는 삭제 구현, 깃허브 URI 버튼 추가(12.02완료)
  * 테이블 크기 조정 추가(12.02 완료)
  * 
  */
@@ -85,9 +83,9 @@ class JPanel_1 extends JPanel {
 				JTable table = new JTable(model);
 				model.fireTableDataChanged();
 				// 텍스트 필드값 가져오기
-				String getTfName = tfName.getText(); // 이름
+				String getTfName = tfName.getText().trim(); // 이름
 				String get_cBox = cBox.getSelectedItem().toString(); // 과목
-				String getLabelSubject = subjectScore.getText(); //성적
+				String getLabelSubject = subjectScore.getText().trim(); //성적
 
 				// 12.02 이름, 점수 유효성 검증 추가 완료
 				try {
@@ -181,15 +179,24 @@ final class JPanel_2 extends JPanel {
 		members.add(new MemberVO("김재현", "JAVA", 100));
 		members.add(new MemberVO("황인기", "C++", 100));
 		
-		String[] fieldName = {"이름", "과목", "성적"};
-		String[][] data = new String[members.size()][members.size()];
-		
+		String[] fieldName = {"이름", "과목", "성적", "등급"};
+		String[][] data = new String[members.size()][fieldName.length];
 		
 		for (int i = 0; i < members.size(); i++) {
 			for (int j = 0; j < members.size(); j++) {
 				data[i][0] = members.get(i).getName();
 				data[i][1] = members.get(i).getSubjectName();
-				data[i][j] = String.valueOf(members.get(i).getScore());
+				data[i][2] = String.valueOf(members.get(i).getScore());
+			}
+		}
+		
+		// 등급 판별 로직
+		for (int i = 0; i < members.size(); i++) {
+			int conScore = members.get(i).getScore();
+				switch (conScore / 10) {
+				case 10: data[i][3] = "A"; break; case 9: data[i][3] = "B"; break;
+				case 8: data[i][3] = "C"; break; case 7: data[i][3] = "D"; break;
+				default: data[i][3] = "F";
 			}
 		}
 		
@@ -211,29 +218,34 @@ final class JPanel_2 extends JPanel {
         
 		btRepresh = new JButton("새로고침");
 		btRepresh.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				al = new ArrayList<MemberVO>();
-//				al.add(new MemberVO(getTfName, get_cBox, Integer.parseInt(getLabelSubject)));
-				
 				String jpanel01 = jpanel1.al.get(0).getName();
 	            String jpanel02 = jpanel1.al.get(0).getSubjectName();
 	            int jpanel03 = jpanel1.al.get(0).getScore();
+	            String jpanel04 = null;
 	            
+	            // 등급 판별 로직
+	            for (int i = 0; i < members.size(); i++) {
+		            	switch (Integer.valueOf(jpanel03) / 10) {
+		            	case 10: jpanel04 = "A"; break; case 9: jpanel04 = "B"; break;
+		            	case 8: jpanel04 = "C"; break; case 7: jpanel04 = "D"; break;
+		            	default: jpanel04 = "F";
+	            	}
+	            }
+
 	            int sum = 0; // 점수 합계 변수
-	            
 	            // Model관련 테이블 관리해주는 클래스 불러옵니다.
 	            DefaultTableModel m = (DefaultTableModel) table.getModel();
 	            // getRowCount() 사용해 밑으로 추가할 수 있도록 출력합니다.
-	            m.insertRow(m.getRowCount(), new Object[] { jpanel01, jpanel02, jpanel03 });
+	            m.insertRow(m.getRowCount(), new Object[] { jpanel01, jpanel02, jpanel03, jpanel04});
 	            table.updateUI();
-	            
 	            // 합계 추가한다.
 	            for (int i = 0; i < m.getRowCount(); i++) {
 	            	String convert = String.valueOf(model.getValueAt(i, 2));
 	            	sum += Integer.valueOf(convert);
 				}
-	            
 	            // 평균 구한다.
 	            avgBtn.setText("평균은 " + (sum / m.getRowCount()) + " 입니다.");
 			}
@@ -262,9 +274,5 @@ public class Index extends JFrame {
 		setSize(500, 600);
 		setLocationRelativeTo(null); // 화면 가운데 배치 사용합니다.
 		setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		new Index();
 	}
 }
