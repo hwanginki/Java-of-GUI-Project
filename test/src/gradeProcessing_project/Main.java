@@ -1,11 +1,14 @@
 package gradeProcessing_project;
 
+import javax.swing.SwingUtilities;
+
 public class Main {
 	public static void main(String[] args) {
-		try {
-			new Login();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new Login();
+			}
+		});
 	}
 }
