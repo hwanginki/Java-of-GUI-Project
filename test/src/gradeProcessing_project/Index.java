@@ -1,7 +1,9 @@
 package gradeProcessing_project;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Label;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,10 +26,9 @@ import member.MemberVO;
  * @프로젝트 시작일_2021.11.25
  * @author HWNAG INKI
  * @see 성적조회, 성적입력 탭창
- * @수정해야될 것 : 성적 처리하는 데 필요한 계산기 구현,
- * 과목 추가 및 합계(12.03완료), 평점 추가할 수 있도록 구현(12.03완료), 점수 유효성(12.02완료)
+ * @수정해야될 것 : 과목 추가 및 합계(12.03완료), 평점 추가할 수 있도록 구현(12.03완료), 점수 유효성(12.02완료)
  * A+, A, -A 그런식 평가할것(12.03완료), 테이블에서 한줄 수정 또는 삭제 구현, 깃허브 URI 버튼 추가(12.02완료)
- * 테이블 크기 조정 추가(12.02 완료)
+ * 테이블 크기 조정 추가(12.02 완료) 아이콘 이미지 구현(12.03완료) 팝업창 아이콘 추가(12.03완료)  
  * 
  */
 class JPanel_1 extends JPanel {
@@ -90,11 +91,11 @@ class JPanel_1 extends JPanel {
 				// 12.02 이름, 점수 유효성 검증 추가 완료
 				try {
 					if (getTfName.equals("")) {
-						JOptionPane.showMessageDialog(null, "아이디를 입력해주세요.", "에러창", JOptionPane.DEFAULT_OPTION);
+						JOptionPane.showMessageDialog(null, "아이디를 입력해주세요.", "에러창", JOptionPane.INFORMATION_MESSAGE);
 					} else if (getLabelSubject.equals("")) {
-						JOptionPane.showMessageDialog(null, "점수를 입력해주세요.", "에러창", JOptionPane.DEFAULT_OPTION);
+						JOptionPane.showMessageDialog(null, "점수를 입력해주세요.", "에러창", JOptionPane.INFORMATION_MESSAGE);
 					} else if (Integer.parseInt(getLabelSubject) > 100) {
-						JOptionPane.showMessageDialog(null, "점수는 100자리이하까지 입력 가능합니다.", "에러창", JOptionPane.DEFAULT_OPTION);
+						JOptionPane.showMessageDialog(null, "점수는 100자리이하까지 입력 가능합니다.", "에러창", JOptionPane.INFORMATION_MESSAGE);
 						subjectScore.setText("");
 					} else {
 						al = new ArrayList<MemberVO>();
@@ -103,11 +104,11 @@ class JPanel_1 extends JPanel {
 						tfName.setText("");	subjectScore.setText("");
 					}
 				} catch (NumberFormatException e1) {
-					JOptionPane.showMessageDialog(null, "문자를 입력하시면 안됩니다.", "에러창", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showMessageDialog(null, "문자를 입력하시면 안됩니다.", "에러창", JOptionPane.ERROR_MESSAGE);
 					tfName.setText("");	subjectScore.setText("");
 					e1.printStackTrace();
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "예외 발생했습니다.", "에러창", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showMessageDialog(null, "예외 발생했습니다.", "에러창", JOptionPane.ERROR_MESSAGE);
 					e2.printStackTrace();
 				}
 			}
@@ -269,6 +270,11 @@ public class Index extends JFrame {
 		jtab.addTab("성적입력", jpanel02.jpanel1);
 		add(jtab);
 		
+		// 로고 이미지 변경
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Image img = kit.getImage("src/img/a_logo.JPG");
+		setIconImage(img);
+
 		setResizable(false); // 확대 커서 못하게 하도록 설정합니다.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 600);

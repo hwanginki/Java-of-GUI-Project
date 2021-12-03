@@ -2,6 +2,8 @@ package gradeProcessing_project;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -52,6 +54,12 @@ public class UserList extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
+		
+		// 로고 이미지 변경
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Image img = kit.getImage("src/img/a_logo.JPG");
+		setIconImage(img);
+		
 		setResizable(false);
 		setLocationRelativeTo(null);
         setVisible(true);

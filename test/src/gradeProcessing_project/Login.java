@@ -2,6 +2,8 @@ package gradeProcessing_project;
 
 import java.awt.Desktop;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -92,6 +94,11 @@ class Login extends JFrame {
 		add(gitHub);
 		add(gitHubBtn);
 		
+		// 로고 이미지 변경
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Image img = kit.getImage("src/img/a_logo.JPG");
+		setIconImage(img);
+		
 		setResizable(false); // 창의 크기 확대(커서) 불가능하게 설정해줍니다.
 		setLocationRelativeTo(null); // 화면 가운데 배치 사용합니다.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,15 +114,15 @@ class Login extends JFrame {
 				String pw = pwText.getText().trim();
 
 				if (id.length() == 0 || pw.length() == 0) {
-					JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호를 입력해주세요.", "입력창", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showMessageDialog(null, "아이디 또는 비밀번호를 입력해주세요.", "입력창", JOptionPane.INFORMATION_MESSAGE);
 					return;
 				} else if (id.equals("test") && pw.equals("test1") || id.equals("abc") && pw.equals("abc1")) {
-					JOptionPane.showMessageDialog(null, "로그인 성공", "로그인", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showMessageDialog(null, "로그인 성공", "로그인", JOptionPane.PLAIN_MESSAGE);
 					dispose(); // 주의! System.exit(0);으로 설정하면 프레임 창 뜨지 않고 프로그램 종료 주의!
 					new Index(); // Index 클래스 이동
 					return;
 				}
-				JOptionPane.showMessageDialog(null, "로그인 실패", "로그인", JOptionPane.DEFAULT_OPTION);
+				JOptionPane.showMessageDialog(null, "로그인 실패", "로그인", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}
