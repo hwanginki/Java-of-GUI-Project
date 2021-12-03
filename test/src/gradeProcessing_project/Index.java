@@ -1,5 +1,7 @@
 package gradeProcessing_project;
 
+import java.awt.Dimension;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -23,8 +25,11 @@ import member.MemberVO;
  * @author HWNAG INKI
  * @see 성적조회, 성적입력 탭창
  * @수정해야될 것 : 성적 처리하는 데 필요한 계산기 구현,
- * 과목 추가 및 합계, 평점 추가할 수 있도록 구현, 점수 유효성(12.02완료)
+ * 과목 추가 및 합계(12.03완료), 평점 추가할 수 있도록 구현(12.03완료), 점수 유효성(12.02완료)
  * A+, A, -A 그런식 평가할것, 테이블에서 한줄 수정 또는 삭제 구현, 깃허브 URI 버튼 추가(12.02완료)
+ * 
+ *
+ * 테이블 크기 조정 추가(12.02 완료)
  * 
  */
 class JPanel_1 extends JPanel {
@@ -79,7 +84,6 @@ class JPanel_1 extends JPanel {
 				DefaultTableModel model = new DefaultTableModel();
 				JTable table = new JTable(model);
 				model.fireTableDataChanged();
-				
 				// 텍스트 필드값 가져오기
 				String getTfName = tfName.getText(); // 이름
 				String get_cBox = cBox.getSelectedItem().toString(); // 과목
@@ -87,12 +91,12 @@ class JPanel_1 extends JPanel {
 
 				// 12.02 이름, 점수 유효성 검증 추가 완료
 				try {
-					if (getTfName.toString().length() == 0) {
+					if (getTfName.equals("")) {
 						JOptionPane.showMessageDialog(null, "아이디를 입력해주세요.", "에러창", JOptionPane.DEFAULT_OPTION);
-					} else if (getLabelSubject.toString().length() == 0) {
+					} else if (getLabelSubject.equals("")) {
 						JOptionPane.showMessageDialog(null, "점수를 입력해주세요.", "에러창", JOptionPane.DEFAULT_OPTION);
 					} else if (Integer.parseInt(getLabelSubject) > 100) {
-						JOptionPane.showMessageDialog(null, "점수는 100자리이하 받을 수 있습니다.", "에러창", JOptionPane.DEFAULT_OPTION);
+						JOptionPane.showMessageDialog(null, "점수는 100자리이하까지 입력 가능합니다.", "에러창", JOptionPane.DEFAULT_OPTION);
 						subjectScore.setText("");
 					} else {
 						al = new ArrayList<MemberVO>();
@@ -160,8 +164,10 @@ class JPanel_1 extends JPanel {
 final class JPanel_2 extends JPanel {
 	private JTable table;
 	private String data[][];
-	private JButton btStore;
 	private JButton btRepresh;
+	private Label avgBtn;
+    private JPanel tablePane;
+    private JScrollPane scroll;
 	JPanel_1 jpanel1;
 	
 	DefaultTableModel model;
@@ -178,6 +184,7 @@ final class JPanel_2 extends JPanel {
 		String[] fieldName = {"이름", "과목", "성적"};
 		String[][] data = new String[members.size()][members.size()];
 		
+		
 		for (int i = 0; i < members.size(); i++) {
 			for (int j = 0; j < members.size(); j++) {
 				data[i][0] = members.get(i).getName();
@@ -188,31 +195,55 @@ final class JPanel_2 extends JPanel {
 		
         model = new DefaultTableModel(data, fieldName);
         table = new JTable(model);
-       
         table.setRowHeight(20); // 칼럼(셀) 높이 설정
         
+        // 테이블 크기 조절합니다
+        table.setPreferredScrollableViewportSize(new Dimension(420, 250));
+        table.setFillsViewportHeight(true);
+        
+        // JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS 임시로 주석
         add(new JScrollPane(table));
         
+        DefaultTableModel m = (DefaultTableModel) table.getModel();
+        avgBtn = new Label("평균은 100 입니다.");
+        avgBtn.setPreferredSize(new Dimension(150, 50));
+        add(avgBtn);
+        
 		btRepresh = new JButton("새로고침");
-
 		btRepresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+//				al = new ArrayList<MemberVO>();
+//				al.add(new MemberVO(getTfName, get_cBox, Integer.parseInt(getLabelSubject)));
+				
 				String jpanel01 = jpanel1.al.get(0).getName();
 	            String jpanel02 = jpanel1.al.get(0).getSubjectName();
-	            String jpanel03 = String.valueOf(jpanel1.al.get(0).getScore());
+	            int jpanel03 = jpanel1.al.get(0).getScore();
+	            
+	            int sum = 0; // 점수 합계 변수
 	            
 	            // Model관련 테이블 관리해주는 클래스 불러옵니다.
 	            DefaultTableModel m = (DefaultTableModel) table.getModel();
-	            // getRowCount() 사용해 밑으로 추가할 수 있도록 출력
+	            // getRowCount() 사용해 밑으로 추가할 수 있도록 출력합니다.
 	            m.insertRow(m.getRowCount(), new Object[] { jpanel01, jpanel02, jpanel03 });
 	            table.updateUI();
+	            
+	            // 합계 추가한다.
+	            for (int i = 0; i < m.getRowCount(); i++) {
+	            	String convert = String.valueOf(model.getValueAt(i, 2));
+	            	sum += Integer.valueOf(convert);
+				}
+	            
+	            // 평균 구한다.
+	            avgBtn.setText("평균은 " + (sum / m.getRowCount()) + " 입니다.");
 			}
-		});
+		}); 
+		avgBtn.setPreferredSize(new Dimension(390, 50));
 		add(btRepresh);
 	}
 }
 
+@SuppressWarnings("serial")
 public class Index extends JFrame {
 	public JPanel_2 jpanel02 = null;
 	
@@ -226,7 +257,7 @@ public class Index extends JFrame {
 		jtab.addTab("성적입력", jpanel02.jpanel1);
 		add(jtab);
 		
-		setResizable(false);
+		setResizable(false); // 확대 커서 못하게 하도록 설정합니다.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 600);
 		setLocationRelativeTo(null); // 화면 가운데 배치 사용합니다.
