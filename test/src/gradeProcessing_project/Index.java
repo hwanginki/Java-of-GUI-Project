@@ -1,12 +1,12 @@
 package gradeProcessing_project;
 
-import java.awt.Dimension;
+import java.awt.Dimension; // 사각형과 폭과 높이의 값을 관리할 수 있도록 도와주는 클래스
 import java.awt.Image;
 import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.ArrayList; // 배열 버전된 컬렉션 프레임워크 중에 배열리스트 클래스
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,12 +15,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
+import javax.swing.JTabbedPane; // Swing에서 제공한 탭 클래스
+import javax.swing.JTable; // Swing에서 제공한 테이블 클래스
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import member.MemberVO;
+import member.MemberVO; // 패키지 중에 MemberVO 클래스를 임포트
 
 /**
  * @프로젝트 시작일_2021.11.25 - 종료일_2021.12.03
@@ -32,37 +32,43 @@ import member.MemberVO;
  * 
  */
 
+// 성적입력 탭 클래스
+@SuppressWarnings("serial")
 class JPanel_1 extends JPanel {
-	// 클래스 멤버 필드 설정
-	private	JPanel panel1;
 	private JLabel labelName;
 	private JTextField tfName;
 	private JLabel labelSubject;
+	
+	@SuppressWarnings("rawtypes")
 	private JComboBox cBox;
 	private JLabel subjectScoreName;
 	private JTextField subjectScore;
 	private JButton btStore;
 	private JButton btInit;
-	private String[] subjectList = {"JAVA", "Python", "C", "C++", "C#", "JS"};
+	// 프로그래밍 언어 과목 배열으로 요소 추가
+	private String[] subjectList = { "JAVA", "Python", "C", "C++", "C#", "JS" };
 	
-	ArrayList<MemberVO> al;
+	// 제네릭(<>)에 MemberVO 클래스 타입으로 ArrayList 초기화 선언해줍니다.
+	ArrayList<MemberVO> al = new ArrayList<>();
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	JPanel_1() {
 		setLayout(null);
-		// 라벨 추가
+		
+		// 이름
 		labelName = new JLabel("이 름");
-		labelName.setSize(180, 35); // setBounds가 아니면 setSzie와 setLocation을 동시해야됩니다.
+		labelName.setSize(180, 35);
 		labelName.setLocation(90, 50);
 
-		// 텍스트 필드
+		// 이름 텍스트
 		tfName = new JTextField(); // 이름 입력 부분
 		tfName.setBounds(150, 50, 200, 30); // 위치와 사이즈
 		
-		// 과목 라벨 추가
+		// 과목
 		labelSubject = new JLabel("과 목");
 		labelSubject.setBounds(90, 95, 90, 50);
 		
-		// 과목 콤보박스 추가
+		// 과목 콤보박스
 		cBox = new JComboBox(subjectList);
 		cBox.setBounds(150, 105, 200, 30);
 				
@@ -81,15 +87,17 @@ class JPanel_1 extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {	
+				// 추가, 삭제 등 사용하기 위해서 DefaultTableModel 클래스 객체 생성 
+				// 이유는 JTable에서 원래 추가, 삭제 기능이 없기 떄문에
+				// DefaultTableModel 클래스가 해주기 때문에 생성합니다.
 				DefaultTableModel model = new DefaultTableModel();
-				JTable table = new JTable(model);
-				model.fireTableDataChanged();
-				// 텍스트 필드값 가져오기
-				String getTfName = tfName.getText().trim(); // 이름
-				String get_cBox = cBox.getSelectedItem().toString(); // 과목
-				String getLabelSubject = subjectScore.getText().trim(); //성적
+				JTable table = new JTable(model); // Swing에서 제공한 Table 객체 생성
+				model.fireTableDataChanged(); // 선언된 테이블 반영합니다.
+				
+				String getTfName = tfName.getText().trim(); // 이름 가져오는 호출
+				String get_cBox = cBox.getSelectedItem().toString(); // 과목 가져오는 호출
+				String getLabelSubject = subjectScore.getText().trim(); // 점수 가져오는 호출
 
-				// 12.02 이름, 점수 유효성 검증 추가 완료
 				try {
 					if (getTfName.equals("")) {
 						JOptionPane.showMessageDialog(null, "아이디를 입력해주세요.", "에러창", JOptionPane.INFORMATION_MESSAGE);
@@ -99,7 +107,8 @@ class JPanel_1 extends JPanel {
 						JOptionPane.showMessageDialog(null, "점수는 100자리이하까지 입력 가능합니다.", "에러창", JOptionPane.INFORMATION_MESSAGE);
 						subjectScore.setText("");
 					} else {
-						al = new ArrayList<MemberVO>();
+						al = new ArrayList<MemberVO>(); // 전역변수 선언
+						// ArrayList의 add() 사용하여 값 요소 저장 
 						al.add(new MemberVO(getTfName, get_cBox, Integer.parseInt(getLabelSubject)));
 						JOptionPane.showMessageDialog(null, "저장되었어요", "저장완료", JOptionPane.DEFAULT_OPTION);
 						tfName.setText("");	subjectScore.setText("");
@@ -114,34 +123,45 @@ class JPanel_1 extends JPanel {
 				}
 			}
 		});
-				
+		
 		// 초기화 버튼
 		btInit = new JButton("초기화");
 		btInit.setBounds(260, 250, 100, 40);
 		btInit.addActionListener(new EventInit()); // 버튼 리스너 등록
 		
-		// 프레임의 컨테이너의 각종 컴포넌트들을 등록
+		// 컨테이너의 각종 컴포넌트 추가
 		add(labelName);
 		add(tfName);
-		add(btStore);
-		add(btInit);
 		add(labelSubject);
 		add(cBox);
 		add(subjectScoreName);
 		add(subjectScore);
+		add(btStore);
+		add(btInit);
 	}
-	
+	// 초기화 버튼 메서드
+	class EventInit implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			tfName.setText(""); // 이름 초기화
+			subjectScore.setText(""); // 점수 초기화
+		}
+	}
 	// 저장 버튼 메서드
 	class EventHandlerSave implements ActionListener {
+		
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			DefaultTableModel model = new DefaultTableModel();
 			JTable table = new JTable(model);
 			model.fireTableDataChanged();
-			// 텍스트 필드값 가져오기
-			String getTfName = tfName.getText(); // 이름
-			String get_cBox = cBox.getSelectedItem().toString(); // 과목
-			// 유효성 필요
-			int getLabelSubject = Integer.valueOf(subjectScore.getText()); //성적
+			
+			String getTfName = tfName.getText(); // 이름 값 가져오기
+			String get_cBox = cBox.getSelectedItem().toString(); // 과목 값 가져오기
+			// 유효성으로 인해 Integer.valueOf() 사용하여
+			// String 타입형인 문자열을 int 타입형으로 변환합니다.
+			int getLabelSubject = Integer.valueOf(subjectScore.getText()); //성적 값 가져오기
 			
 			ArrayList<MemberVO> al = new ArrayList<MemberVO>();
 			al.add(new MemberVO(getTfName, get_cBox, getLabelSubject));
@@ -151,26 +171,19 @@ class JPanel_1 extends JPanel {
 			subjectScore.setText("");
 		}
 	}
-	
-	// 초기화 버튼 메서드
-	class EventInit implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			tfName.setText(""); // 이름 초기화
-			subjectScore.setText(""); // 점수 초기화
-		}
-	}
 }
-
+// 성적조회 탭 클래스
+@SuppressWarnings("serial")
 final class JPanel_2 extends JPanel {
-	private JTable table;
+	private JTable table; // 테이블 선언	
 	private String data[][];
 	private JButton btUpdate;
-	private JButton btDelete;
-	private JButton btRepresh;
-	private Label avgBtn;
+	private Label avgBtn; // 평균 라벨
+	private JButton btDelete; // 삭제 버튼
+	private JButton btRepresh; // 새로고침 버튼
     private JPanel tablePane;
     private JScrollPane scroll;
-	JPanel_1 jpanel1;
+	JPanel_1 jpanel1; // 클래스 생성
 	
 	DefaultTableModel model;
 	
@@ -286,7 +299,7 @@ final class JPanel_2 extends JPanel {
 					JOptionPane.showMessageDialog(null, "성적입력 후, 다시시도해보세요.", "경고", JOptionPane.WARNING_MESSAGE);
 					e1.printStackTrace();
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, "다른 예외 문제가 발생했습니다.(관리자에게 문의해보세요)", "에러창", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "다른 예외 문제가 발생했습니다.(관리자에게 문의해보세요)", "에러", JOptionPane.ERROR_MESSAGE);
 					e2.printStackTrace();
 				}
 			}
